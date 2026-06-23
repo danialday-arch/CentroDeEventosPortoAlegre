@@ -1,0 +1,60 @@
+Si java dice no quiero chambear, mataloooo, mata los procesos que estan usando el puerto con esto
+taskkill /f /im java.exe
+
+Como usar el proyecto
+1) Levantar Inventario, Mesas y Clientes (POST/GET/PUT/DELETE segun corresponda) ya que son independientes del resto de MS.
+2) Catálogo Depende de Inventario
+3) Reservas Depende de Clientes y Mesas
+4) Pedidos Depende de Catalogo, Inventario, Mesas y necesita que Cocina y Bar esten funcionando.
+5) Cocina y Bar son solo para GET'S
+
+* NOTA CATALOGO: CUANDO CREES UN PRODUCTO, CONSIDERA LA CANTIDAD DE ITEMS QUE SE CONSUMEN AL CREARLO, PUES AL PASAR POR PEDIDO, SI PONES 2 Y ESE 2 PIDE 20 POR CADA ITEM DEL
+CATALOGO Y EN INVENTARIO TIENES 39 DE DICHO ITEM TE SALDRA ERROR.
+
+Flujo logico
+Cliente, Mesa -> Reserva
+Infraestructura -> Cocina/Bar (funcionando) -> Pedidos
+Infraestructura -> Empleados
+Inventario -> Catalogo -> Pedidos
+
+
+PEDIDO, CATALOGO => COCINA
+LINKS:
+API Inventario (Puerto 8083):
+http://localhost:8083/swagger-ui/index.html
+
+API Mesas (Puerto 8081):
+http://localhost:8081/swagger-ui/index.html
+
+API Clientes (Puerto 8082):
+http://localhost:8082/swagger-ui/index.html
+
+API Catálogo (Puerto 8087):
+http://localhost:8087/swagger-ui/index.html
+
+API Reservas (Puerto 8091):
+http://localhost:8091/swagger-ui/index.html
+
+API Pedidos (Puerto 8088):
+http://localhost:8088/swagger-ui/index.html
+
+API Orden Cocina (Puerto 8089):
+http://localhost:8089/swagger-ui/index.html
+
+API Orden Bar (Puerto 8090):
+http://localhost:8090/swagger-ui/index.html
+
+API Infraestructura (Puerto 8085):
+http://localhost:8085/swagger-ui/index.html
+
+API Empleados (Puerto 8086):
+http://localhost:8086/swagger-ui/index.html
+
+LISTOS:
+- MS-RESERVAS CRUD COMPLETO, INTERCONEXION COMPLETA
+- COCINA OK
+- BAR
+
+** PENDIENTES
+- Si hago un POST con un insumo que no existe pasa corbata y deberia decir que el insumo no existe y obviamente no poder hacer el post
+-

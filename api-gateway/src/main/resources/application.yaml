@@ -1,0 +1,172 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+      routes:
+        # ==========================================
+        # RUTAS DE TRAFICO DE APIS (Logica de Negocio)
+        # ==========================================
+        - id: route-ms-mesas
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/mesas/**
+
+        - id: route-ms-clientes
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/clientes/**
+
+        - id: route-ms-inventario
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/inventario/**
+
+        - id: route-ms-infraestructura
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/infraestructura/**
+
+        - id: route-ms-empleados
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/empleados/**
+
+        - id: route-ms-catalogo
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/catalogo/**
+
+        - id: route-ms-pedidos
+          uri: http://localhost:8088
+          predicates:
+            - Path=/api/pedidos/**
+
+        - id: route-ms-orden-cocina
+          uri: http://localhost:8089
+          predicates:
+            - Path=/api/cocina/**
+
+        - id: route-ms-orden-bar
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/bar/**
+
+        - id: route-ms-reservas
+          uri: http://localhost:8091
+          predicates:
+            - Path=/api/reservas/**
+
+        # ==========================================
+        # RUTAS DE EXTRACCION DE DOCS SWAGGER
+        # ==========================================
+        - id: docs-mesas
+          uri: http://localhost:8081
+          predicates:
+            - Path=/docs-mesas/**
+          filters:
+            - RewritePath=/docs-mesas/(?<segment>.*), /$\{segment}
+
+        - id: docs-clientes
+          uri: http://localhost:8082
+          predicates:
+            - Path=/docs-clientes/**
+          filters:
+            - RewritePath=/docs-clientes/(?<segment>.*), /$\{segment}
+
+        - id: docs-inventario
+          uri: http://localhost:8083
+          predicates:
+            - Path=/docs-inventario/**
+          filters:
+            - RewritePath=/docs-inventario/(?<segment>.*), /$\{segment}
+
+        - id: docs-infraestructura
+          uri: http://localhost:8085
+          predicates:
+            - Path=/docs-infraestructura/**
+          filters:
+            - RewritePath=/docs-infraestructura/(?<segment>.*), /$\{segment}
+
+        - id: docs-empleados
+          uri: http://localhost:8086
+          predicates:
+            - Path=/docs-empleados/**
+          filters:
+            - RewritePath=/docs-empleados/(?<segment>.*), /$\{segment}
+
+        - id: docs-catalogo
+          uri: http://localhost:8087
+          predicates:
+            - Path=/docs-catalogo/**
+          filters:
+            - RewritePath=/docs-catalogo/(?<segment>.*), /$\{segment}
+
+        - id: docs-pedidos
+          uri: http://localhost:8088
+          predicates:
+            - Path=/docs-pedidos/**
+          filters:
+            - RewritePath=/docs-pedidos/(?<segment>.*), /$\{segment}
+
+        - id: docs-cocina
+          uri: http://localhost:8089
+          predicates:
+            - Path=/docs-cocina/**
+          filters:
+            - RewritePath=/docs-cocina/(?<segment>.*), /$\{segment}
+
+        - id: docs-bar
+          uri: http://localhost:8090
+          predicates:
+            - Path=/docs-bar/**
+          filters:
+            - RewritePath=/docs-bar/(?<segment>.*), /$\{segment}
+
+        - id: docs-reservas
+          uri: http://localhost:8091
+          predicates:
+            - Path=/docs-reservas/**
+          filters:
+            - RewritePath=/docs-reservas/(?<segment>.*), /$\{segment}
+
+# --- CONFIGURACION DEL SUPER SWAGGER ---
+springdoc:
+  swagger-ui:
+    urls:
+      - name: API Mesas
+        url: /docs-mesas/v3/api-docs
+      - name: API Clientes
+        url: /docs-clientes/v3/api-docs
+      - name: API Inventario
+        url: /docs-inventario/v3/api-docs
+      - name: API Infraestructura
+        url: /docs-infraestructura/v3/api-docs
+      - name: API Empleados
+        url: /docs-empleados/v3/api-docs
+      - name: API Catalogo
+        url: /docs-catalogo/v3/api-docs
+      - name: API Pedidos
+        url: /docs-pedidos/v3/api-docs
+      - name: API Cocina
+        url: /docs-cocina/v3/api-docs
+      - name: API Bar
+        url: /docs-bar/v3/api-docs
+      - name: API Reservas
+        url: /docs-reservas/v3/api-docs

@@ -1,0 +1,169 @@
+version: '3.8'
+
+networks:
+  porto-net:
+    driver: bridge
+
+services:
+  # bd central
+  mysql-db:
+    image: mysql:8.0
+    container_name: db-portoalegre
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: portoalegre_db
+    ports:
+      - "3306:3306"
+    networks:
+      - porto-net
+
+  # gateway (unico que sale para afuera)
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - porto-net
+    depends_on:
+      - ms-mesas
+      - ms-pedidos
+      - ms-catalogo
+      - ms-clientes
+      - ms-empleados
+      - ms-infraestructura
+      - ms-inventario
+      - ms-orden-bar
+      - ms-orden-cocina
+      - ms-reservas
+
+  ms-mesas:
+    build: ./ms-mesas
+    container_name: ms-mesas
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+      - MS_INFRAESTRUCTURA_HOST=ms-infraestructura
+      - MS_INVENTARIO_HOST=ms-inventario
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  ms-clientes:
+    build: ./ms-clientes
+    container_name: ms-clientes
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  ms-inventario:
+    build: ./ms-inventario
+    container_name: ms-inventario
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  ms-infraestructura:
+    build: ./ms-infraestructura
+    container_name: ms-infraestructura
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  ms-empleados:
+    build: ./ms-empleados
+    container_name: ms-empleados
+    ports:
+      - "8086:8086"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  ms-catalogo:
+    build: ./ms-catalogo
+    container_name: ms-catalogo
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  # core del negocio, depende de varios ms
+  ms-pedidos:
+    build: ./ms-pedidos
+    container_name: ms-pedidos
+    ports:
+      - "8088:8088"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+      - MS_EMPLEADOS_HOST=ms-empleados
+      - MS_CATALOGO_HOST=ms-catalogo
+      - MS_INVENTARIO_HOST=ms-inventario
+      - MS_COCINA_HOST=ms-orden-cocina
+      - MS_BAR_HOST=ms-orden-bar
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  ms-orden-cocina:
+    build: ./ms-orden-cocina
+    container_name: ms-orden-cocina
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  ms-orden-bar:
+    build: ./ms-orden-bar
+    container_name: ms-orden-bar
+    ports:
+      - "9090:8090" # Asegúrate que este puerto interno coincida con tu app
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db
+
+  ms-reservas:
+    build: ./ms-reservas
+    container_name: ms-reservas
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/portoalegre_db?createDatabaseIfNotExist=true
+      # variables para que ms-reservas encuentre a los otros 2
+      - MS_CLIENTES_HOST=ms-clientes
+      - MS_MESAS_HOST=ms-mesas
+    networks:
+      - porto-net
+    depends_on:
+      - mysql-db

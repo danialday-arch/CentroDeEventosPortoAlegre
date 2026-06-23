@@ -1,0 +1,19 @@
+server:
+  port: 8081
+  #Hbilitar mostrar errores :3
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: ms-mesas
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/portoalegre_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    # despyes del UTC "&allowPublicKeyRetrieval=true" añadimos codigo para que literalmente le ponga el candado al pedirle las llaves a la BD, por que si no tira error.
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update #cambiar a create/update cuando cuando estes editando cosas o ya este todo ok y sea la version final
+    show-sql: true

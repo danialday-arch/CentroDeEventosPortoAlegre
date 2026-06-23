@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-catalogo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-clientes/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-empleados/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-infraestructura/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-inventario/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-mesas/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-orden-bar/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-orden-cocina/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-pedidos/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-reservas/src/main/java" charset="UTF-8" />
+  </component>
+</project>
