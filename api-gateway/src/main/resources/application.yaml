@@ -9,6 +9,8 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      x-forwarded:
+        prefix-enabled: false
       globalcors:
         cors-configurations:
           '[/**]':
@@ -23,137 +25,168 @@ spring:
         # ==========================================
         # RUTAS DE TRAFICO DE APIS (Logica de Negocio)
         # ==========================================
-        - id: route-ms-mesas
-          uri: http://localhost:8081
-          predicates:
-            - Path=/api/mesas/**
-
+        # --- NUBE (RAILWAY) ---
         - id: route-ms-clientes
-          uri: http://localhost:8082
+          uri: https://ms-clientes-production-ddc2.up.railway.app
           predicates:
             - Path=/api/clientes/**
 
+        # --- LOCALES (DOCKER) ---
+        - id: route-ms-mesas
+          uri: http://ms-mesas:8081
+          predicates:
+            - Path=/api/mesas/**
+          filters:
+            - PreserveHostHeader
+
         - id: route-ms-inventario
-          uri: http://localhost:8083
+          uri: http://ms-inventario:8083
           predicates:
             - Path=/api/inventario/**
+          filters:
+            - PreserveHostHeader
 
         - id: route-ms-infraestructura
-          uri: http://localhost:8085
+          uri: http://ms-infraestructura:8085
           predicates:
             - Path=/api/infraestructura/**
+          filters:
+            - PreserveHostHeader
 
         - id: route-ms-empleados
-          uri: http://localhost:8086
+          uri: http://ms-empleados:8086
           predicates:
             - Path=/api/empleados/**
+          filters:
+            - PreserveHostHeader
 
         - id: route-ms-catalogo
-          uri: http://localhost:8087
+          uri: http://ms-catalogo:8087
           predicates:
             - Path=/api/catalogo/**
+          filters:
+            - PreserveHostHeader
 
         - id: route-ms-pedidos
-          uri: http://localhost:8088
+          uri: http://ms-pedidos:8088
           predicates:
             - Path=/api/pedidos/**
+          filters:
+            - PreserveHostHeader
 
         - id: route-ms-orden-cocina
-          uri: http://localhost:8089
+          uri: http://ms-orden-cocina:8089
           predicates:
             - Path=/api/cocina/**
+          filters:
+            - PreserveHostHeader
 
         - id: route-ms-orden-bar
-          uri: http://localhost:8090
+          uri: http://ms-orden-bar:8090
           predicates:
             - Path=/api/bar/**
+          filters:
+            - PreserveHostHeader
 
         - id: route-ms-reservas
-          uri: http://localhost:8091
+          uri: http://ms-reservas:8091
           predicates:
             - Path=/api/reservas/**
+          filters:
+            - PreserveHostHeader
 
         # ==========================================
         # RUTAS DE EXTRACCION DE DOCS SWAGGER
         # ==========================================
-        - id: docs-mesas
-          uri: http://localhost:8081
-          predicates:
-            - Path=/docs-mesas/**
-          filters:
-            - RewritePath=/docs-mesas/(?<segment>.*), /$\{segment}
-
+        # --- NUBE (RAILWAY) ---
         - id: docs-clientes
-          uri: http://localhost:8082
+          uri: https://ms-clientes-production-ddc2.up.railway.app
           predicates:
             - Path=/docs-clientes/**
           filters:
             - RewritePath=/docs-clientes/(?<segment>.*), /$\{segment}
 
+        # --- LOCALES (DOCKER) ---
+        - id: docs-mesas
+          uri: http://ms-mesas:8081
+          predicates:
+            - Path=/docs-mesas/**
+          filters:
+            - RewritePath=/docs-mesas/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
+
         - id: docs-inventario
-          uri: http://localhost:8083
+          uri: http://ms-inventario:8083
           predicates:
             - Path=/docs-inventario/**
           filters:
             - RewritePath=/docs-inventario/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
 
         - id: docs-infraestructura
-          uri: http://localhost:8085
+          uri: http://ms-infraestructura:8085
           predicates:
             - Path=/docs-infraestructura/**
           filters:
             - RewritePath=/docs-infraestructura/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
 
         - id: docs-empleados
-          uri: http://localhost:8086
+          uri: http://ms-empleados:8086
           predicates:
             - Path=/docs-empleados/**
           filters:
             - RewritePath=/docs-empleados/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
 
         - id: docs-catalogo
-          uri: http://localhost:8087
+          uri: http://ms-catalogo:8087
           predicates:
             - Path=/docs-catalogo/**
           filters:
             - RewritePath=/docs-catalogo/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
 
         - id: docs-pedidos
-          uri: http://localhost:8088
+          uri: http://ms-pedidos:8088
           predicates:
             - Path=/docs-pedidos/**
           filters:
             - RewritePath=/docs-pedidos/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
 
         - id: docs-cocina
-          uri: http://localhost:8089
+          uri: http://ms-orden-cocina:8089
           predicates:
             - Path=/docs-cocina/**
           filters:
             - RewritePath=/docs-cocina/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
 
         - id: docs-bar
-          uri: http://localhost:8090
+          uri: http://ms-orden-bar:8090
           predicates:
             - Path=/docs-bar/**
           filters:
             - RewritePath=/docs-bar/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
 
         - id: docs-reservas
-          uri: http://localhost:8091
+          uri: http://ms-reservas:8091
           predicates:
             - Path=/docs-reservas/**
           filters:
             - RewritePath=/docs-reservas/(?<segment>.*), /$\{segment}
+            - PreserveHostHeader
 
 # --- CONFIGURACION DEL SUPER SWAGGER ---
 springdoc:
   swagger-ui:
     urls:
-      - name: API Mesas
-        url: /docs-mesas/v3/api-docs
       - name: API Clientes
         url: /docs-clientes/v3/api-docs
+      - name: API Mesas
+        url: /docs-mesas/v3/api-docs
       - name: API Inventario
         url: /docs-inventario/v3/api-docs
       - name: API Infraestructura

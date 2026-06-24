@@ -4,6 +4,7 @@ import com.example.ms_reservas.model.Reserva;
 import com.example.ms_reservas.repository.ReservaRepository;
 import com.example.ms_reservas.feign.ClienteClient;
 import com.example.ms_reservas.feign.MesaClient;
+import feign.FeignException; // Importante: importar para capturar errores de Feign
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +17,7 @@ public class ReservaService {
 
     private final ReservaRepository repository;
     private final ClienteClient clienteClient;
-    private final MesaClient mesaClient; // Inyectamos el nuevo cliente
+    private final MesaClient mesaClient;
 
     public List<Reserva> findAll() {
         return repository.findAll();
@@ -27,21 +28,24 @@ public class ReservaService {
     }
 
     public Reserva save(Reserva reserva) {
-        // 1. Validar que el Cliente exista
+        // 1. Validar Cliente
         try {
             clienteClient.obtenerClientePorId(reserva.getClienteId());
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error: El cliente con ID " + reserva.getClienteId() + " no existe.");
+        } catch (FeignException e) {
+            throw new IllegalArgumentException("Error al validar Cliente (ID " + reserva.getClienteId() + "): " + e.status() + " - " + e.getMessage());
         }
 
-        // 2. Validar que la Mesa exista
+        // 2. Validar Mesa
         try {
             mesaClient.obtenerMesaPorId(reserva.getMesaId());
+        } catch (FeignException e) {
+            // Esto nos dirá si es un 404 real o un error de conexión
+            throw new IllegalArgumentException("Error al validar Mesa (ID " + reserva.getMesaId() + "): " + e.status() + " - " + e.getMessage());
         } catch (Exception e) {
-            throw new IllegalArgumentException("Error: La mesa con ID " + reserva.getMesaId() + " no existe.");
+            throw new IllegalArgumentException("Error de conexión inesperado: " + e.getMessage());
         }
 
-        // 3. Si ambos existen, guardar
+        // 3. Guardar
         return repository.save(reserva);
     }
 

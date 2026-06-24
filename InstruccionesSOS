@@ -58,3 +58,11 @@ LISTOS:
 ** PENDIENTES
 - Si hago un POST con un insumo que no existe pasa corbata y deberia decir que el insumo no existe y obviamente no poder hacer el post
 -
+
+# Comandos lanzamiento:
+docker-compose down
+docker-compose up -d --build
+docker-compose up -d
+
+URL BASE:
+http://localhost:8080/webjars/swagger-ui/index.html

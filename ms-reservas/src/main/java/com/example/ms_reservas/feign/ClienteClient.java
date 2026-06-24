@@ -4,9 +4,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "ms-clientes", url = "http://${MS_CLIENTES_HOST:localhost}:8082/api/clientes")
+// La URL se inyecta directamente desde el docker-compose usando la variable MS_CLIENTES_HOST
+@FeignClient(name = "ms-clientes", url = "${MS_CLIENTES_HOST}")
 public interface ClienteClient {
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/clientes/{id}")
     Object obtenerClientePorId(@PathVariable("id") Long id);
 }
